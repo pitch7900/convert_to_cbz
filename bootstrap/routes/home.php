@@ -12,7 +12,7 @@ return function (App $app) {
                 ->add(new AuthMiddleware($app))
                 ->setName('status.json');  
                 
-        $app->get('/', HomeController::class . ':convert')
+        $app->post('/convert', HomeController::class . ':convert')
                 ->add(new AuthMiddleware($app))
                 ->setName('convert');
 };

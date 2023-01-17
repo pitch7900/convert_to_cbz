@@ -73,7 +73,7 @@ if (!function_exists('removeAccents')) {
      * @param bool $tolower
      * @return string
      */
-    function removeAccents(string $string, bool $tolower = true):string 
+    function removeAccents(string $string, bool $tolower = true): string
     {
         $unwanted_array = array(
             'Š' => 'S', 'š' => 's', 'Ž' => 'Z', 'ž' => 'z', 'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A', 'Å' => 'A', 'Æ' => 'A', 'Ç' => 'C', 'È' => 'E', 'É' => 'E',
@@ -103,7 +103,7 @@ if (!function_exists('removeSpecialChars')) {
      * @param bool $tolower
      * @return string
      */
-    function removeSpecialChars(string $string, bool $tolower = true):string 
+    function removeSpecialChars(string $string, bool $tolower = true): string
     {
         $newstring = removeAccents($string, $tolower);
         $newstring = rtrim(preg_replace('~[^0-9a-z]+~i', '-', preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($newstring, ENT_NOQUOTES, 'UTF-8'))), ' ');
@@ -118,3 +118,35 @@ if (!function_exists('removeSpecialChars')) {
     }
 }
 
+/**
+ * It takes a filename as a string and returns the file extension as a string
+ * 
+ * @param filename The name of the file you want to get the extension of.
+ * 
+ * @return string The file extension of the file.
+ */
+if (!function_exists('getFileExtension')) {
+    function getFileExtension($filename): string
+    {
+        $ext = (string) pathinfo($filename, PATHINFO_EXTENSION);
+        return $ext;
+    }
+}
+
+/**
+ * It takes a filename and replaces the extension with the new extension.
+ * 
+ * @param filename The filename you want to change the extension of.
+ * @param new_extension The new extension you want to use.
+ */
+if (!function_exists('replace_extension')) {
+    function replace_extension($filename, $new_extension)
+    {
+        $extension  = getFileExtension($filename);
+        if (is_null($extension) || strlen($extension) == 0) {
+            return $filename . "." . $new_extension;
+        }
+        $filename = str_ireplace($extension, "", $filename);
+        return $filename . $new_extension;
+    }
+}
