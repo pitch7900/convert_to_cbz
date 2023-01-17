@@ -5,7 +5,6 @@ use Dotenv\Dotenv;
 use App\ContainerFactory;
 use Slim\Factory\AppFactory;
 use Dotenv\Exception\InvalidPathException;
-use Pitch7900\SessionsHandler\DBSessionsHandler;
 
 
 $currentdbversion = 4;
@@ -16,16 +15,6 @@ date_default_timezone_set('Europe/Zurich');
 
 require __DIR__ . '/../vendor/autoload.php';
 
-
-try {
-    $dotenv = Dotenv::createMutable($rootPath . '/config/');
-    $dotenv->load();
-} catch (InvalidPathException $e) {
-    die("Unable to load configuration file");
-}
-
-//Load DB configuration
-require_once __DIR__ . '/database.php';
 
 // session_cache_limiter('public');
 // ini_set("session.cookie_httponly", 1);

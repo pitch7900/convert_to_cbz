@@ -1,0 +1,20 @@
+version: '3.3'
+
+services:
+
+  webserver:
+    build: ./converter-service/
+    image: converter-service
+    container_name: converter-service
+    ports:
+      - "1080:80"
+    networks:
+      - frontend
+    restart: always
+    environment:
+      - apptoken=123456789
+
+networks:
+  frontend:
+    driver: bridge
+

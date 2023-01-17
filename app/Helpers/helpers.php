@@ -118,4 +118,3 @@ if (!function_exists('removeSpecialChars')) {
     }
 }
 
-

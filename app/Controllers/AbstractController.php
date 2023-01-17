@@ -11,6 +11,7 @@ use GuzzleHttp\Psr7\LazyOpenStream;
 use Slim\Psr7\Factory\StreamFactory;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
+
 /**
  * This abstract class defines methods and properties used by all controllers.
  *
@@ -53,7 +54,7 @@ abstract class AbstractController
     {
         $response = $response
             ->withHeader('Cache-Control', 'no-cache, must-revalidate')
-            ->withHeader('Expires','Mon, 26 Jul 1997 05:00:00 GMT')
+            ->withHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT')
             ->withHeader('Location', $path)
             ->withStatus($code);
         return $response;
@@ -69,7 +70,7 @@ abstract class AbstractController
      */
     protected function withJpeg(ResponseInterface $response, string $jpegdata): ResponseInterface
     {
-        
+
         $stream = (new StreamFactory())->createStream($jpegdata, 'rb');
         $response = $response
             ->withAddedHeader('Cache-Control', 'public')
@@ -133,9 +134,26 @@ abstract class AbstractController
         $response = $response
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('Cache-Control', 'no-cache, must-revalidate')
-            ->withHeader('Expires','Mon, 26 Jul 1997 05:00:00 GMT')
+            ->withHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT')
             ->withBody($stream)
             ->withStatus(200);
+        return $response;
+    }
+
+    /**
+     * Return an http code
+     * @author Pierre Christensen <pierre.christensen@gmail.com>
+     * @param ResponseInterface $response
+     * @param array    $payload
+     * @return ResponseInterface
+     */
+    protected function withStatus(ResponseInterface $response, int $code, string $message): ResponseInterface
+    {
+        $response = $response
+            ->withHeader('Cache-Control', 'no-cache, must-revalidate')
+            ->withHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT')
+            ->withHeader('Message', $message)
+            ->withStatus($code);
         return $response;
     }
 }

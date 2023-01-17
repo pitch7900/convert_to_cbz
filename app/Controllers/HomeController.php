@@ -2,9 +2,10 @@
 
 namespace App\Controllers;
 
-use Slim\Http\ServerRequest;
+use Slim\Http\ServerRequest as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 use App\Controllers\AbstractController;
-use \Psr\Http\Message\ResponseInterface;
+
 
 class HomeController extends AbstractController
 {
@@ -16,14 +17,20 @@ class HomeController extends AbstractController
     }
 
     /**
-     * Return the "Home" view
+     * Return the "Status" view
      * @param Request $request
      * @param Response $response
      * @return HTML
      */
-    public function home(ServerRequest $request, ResponseInterface $response)
+    public function status(Request $request, Response $response)
     {
         return $this->withJSON($response,["status"=>"OK"]);
     }
+    
+    public function convert(Request $request, Response $response)
+    {
+        return $this->withJSON($response,["status"=>"OK"]);
+    }
+
 
 }
