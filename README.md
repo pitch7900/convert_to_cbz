@@ -1,41 +1,16 @@
-# Template_Slim4_API
+# Convert to CBZ
 
-Features :
+Convert any CBR, CBR, PDF to a valid and clean CBZ
+This is supposed to be used as a container
 
-- Template for API in Slim 4.
-- Routes (defined in /bootstrap/routes.php)
+A valid token should be passed in the headers
+Token is set in the docker-compose.yml file
 
-## Requirement
 
-- Php 7.4
-- apache 2 server
 
-## Configuration file
-
-/config/.env
-
-```ini
-DB_DRIVER=sqlsrv
-DB_HOST='localhost'
-DB_DATABASE='DB'
-DB_USERNAME='USEr'
-DB_PASSWORD='PASSWORD'
-DB_PORT=1433
-DB_COLLATION='French_CI_AS'
-DB_CHARSET='utf8'
-```
-
-## Composer installation
+## Installation
 
 ```bash
 composer install
 ```
 
-## gulp installation
-
-```bash
-npm install gulp --save-dev
-npm install -g gulp-cli
-npm install gulp-connect-php
-npm install browser-sync
-```
