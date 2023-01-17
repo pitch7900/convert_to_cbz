@@ -12,6 +12,7 @@ RUN apt-get -y install \
                apache2\
                php\
                php-cli\
+               php-xml\
                poppler-utils\
                apt-utils\
                composer\
@@ -56,10 +57,8 @@ RUN chmod +x /opt/convert_to_cbz.py
 RUN mkdir -p /var/www/service
 
 #populate it
-RUN git clone git@github.com:pitch7900/convert_to_cbz.git
-RUN mv convert_to_cbz /var/www/service
-RUN cd /var/www/service 
-RUN composer install 
+RUN git clone https://github.com/pitch7900/convert_to_cbz.git /var/www/service
+# RUN composer install --working-dir=/var/www/service/
 RUN rm -rf /var/www/service/.git && \
     rm -rf /var/www/service/.vscode && \
     rm -rf /var/www/service/docker && \

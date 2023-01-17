@@ -11,6 +11,23 @@ Token is set in the docker-compose.yml file
 ## Installation
 
 ```bash
-composer install
+cd docker
+docker-compose up -d --build
 ```
 
+## Usage
+
+### Status
+
+```bash
+curl --location --request GET 'http://localhost:1080/status.json' \
+--header 'token: 123456789'
+```
+
+### Post a file to convert
+
+```bash
+curl --location --request POST 'http://localhost:1080/convert' \
+--header 'token: 123456789' \
+--form 'file=@"/pathtocbzfile.cbz"
+```
