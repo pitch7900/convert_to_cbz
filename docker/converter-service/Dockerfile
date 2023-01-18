@@ -59,7 +59,7 @@ RUN mkdir -p /var/www/service
 
 #populate it
 RUN git clone https://github.com/pitch7900/convert_to_cbz.git /var/www/service
-RUN composer install --working-dir=/var/www/service/
+RUN composer install --no-interaction --working-dir=/var/www/service/
 RUN rm -rf /var/www/service/.git && \
     rm -rf /var/www/service/.vscode && \
     rm -rf /var/www/service/docker && \
