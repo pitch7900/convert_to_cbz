@@ -11,6 +11,8 @@ services:
     networks:
       - frontend
     restart: always
+    environment:
+      - apptoken=${apptoken}
     # volumes:
     #   - ../:/var/www/service
 

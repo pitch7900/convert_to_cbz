@@ -13,6 +13,7 @@ RUN apt-get -y install \
                php\
                php-cli\
                php-xml\
+               php-curl\
                poppler-utils\
                apt-utils\
                composer\
