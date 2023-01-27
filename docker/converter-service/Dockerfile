@@ -28,6 +28,7 @@ RUN apt-get -y update && apt-get -y upgrade &&  apt-get -y install \
                rar\
                re2c\
                sed\
+               sqlite3\
                sudo\
                tar\
                unrar\
@@ -64,6 +65,9 @@ RUN rm -rf /var/www/service/.git && \
     rm -rf /var/www/service/.vscode && \
     rm -rf /var/www/service/docker && \
     rm -rf /var/www/service/logs/*
+
+#Create sqlite DB
+RUN /usr/bin/sqlite3 /var/www/service/database/database.sqlite < /var/www/service/database/createtables.sql
 
 #Change permissions
 RUN chown -R www-data:www-data /var/www/service
