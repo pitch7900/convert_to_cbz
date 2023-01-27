@@ -4,4 +4,3 @@ composer.lock
 /logs/*
 /cache/*
 node_modules
-/config/.env
