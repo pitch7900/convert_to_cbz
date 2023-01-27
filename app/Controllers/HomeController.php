@@ -27,9 +27,11 @@ class HomeController extends AbstractController
     public function status(Request $request, Response $response)
     {
         $logs = LogsDB::get()->toArray();
-
+        $busy = LogsDB::whereNull('end')->count()>=1?true:false;
+        
         return $this->withJSON($response, [
             "status" => "OK",
+            'busy' => $busy,
             "logs"=>$logs
         ]);
     }
