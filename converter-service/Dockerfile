@@ -40,10 +40,10 @@ RUN apt-get -y update && apt-get -y upgrade &&  apt-get -y install \
 RUN pip install Pillow tqdm rarfile python-magic colored PyMuPDF 
 
 #change php value to accept 4G files
-RUN sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 4096M/g' /etc/php/8.1/apache2/php.ini && \
-    sed -i 's/memory_limit = 128M/memory_limit = -1/g' /etc/php/8.1/apache2/php.ini && \
-    sed -i 's/post_max_size = 8M/post_max_size = 4096M/g' /etc/php/8.1/apache2/php.ini && \
-    sed -i 's/max_execution_time = 30/max_execution_time = 1200/g' /etc/php/8.1/apache2/php.ini 
+RUN sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 4096M/g' /etc/php/`php -r "echo substr(phpversion(),0,3);"`/apache2/php.ini && \
+    sed -i 's/memory_limit = 128M/memory_limit = -1/g' /etc/php/`php -r "echo substr(phpversion(),0,3);"`/apache2/php.ini && \
+    sed -i 's/post_max_size = 8M/post_max_size = 4096M/g' /etc/php/`php -r "echo substr(phpversion(),0,3);"`/apache2/php.ini && \
+    sed -i 's/max_execution_time = 30/max_execution_time = 1200/g' /etc/php/`php -r "echo substr(phpversion(),0,3);"`/apache2/php.ini 
 
 #Setup apache
 COPY apache-conf/service.conf /etc/apache2/sites-available/000-default.conf
@@ -59,7 +59,7 @@ RUN chmod +x /opt/convert_to_cbz.py
 RUN mkdir -p /var/www/service
 
 #populate it
-RUN git clone https://github.com/pitch7900/convert_to_cbz.git /var/www/service
+COPY www /var/www/service
 RUN composer install --no-interaction --working-dir=/var/www/service/
 RUN rm -rf /var/www/service/.git && \
     rm -rf /var/www/service/.vscode && \
@@ -67,7 +67,7 @@ RUN rm -rf /var/www/service/.git && \
     rm -rf /var/www/service/logs/*
 
 #Create sqlite DB
-RUN /usr/bin/sqlite3 /var/www/service/database/database.sqlite < /var/www/service/database/createtables.sql
+RUN rm -f /var/www/service/database/database.sqlite && /usr/bin/sqlite3 /var/www/service/database/database.sqlite < /var/www/service/database/createtables.sql
 
 #Change permissions
 RUN chown -R www-data:www-data /var/www/service

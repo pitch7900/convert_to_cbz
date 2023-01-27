@@ -1,0 +1,11 @@
+CREATE TABLE "logsdb" (
+	"id"	INTEGER PRIMARY KEY AUTOINCREMENT,
+	"file"	TEXT,
+	"tmp_name"	TEXT,
+	"size"	INTEGER,
+	"start"	TIMESTAMP,
+	"end"	TIMESTAMP,
+	"status"	TEXT,
+	"created_at"	TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	"updated_at"	TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
