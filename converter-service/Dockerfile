@@ -67,8 +67,10 @@ RUN rm -rf /var/www/service/.git && \
     rm -rf /var/www/service/logs/*
 
 #Create sqlite DB
-RUN rm -f /var/www/service/database/database.sqlite && /usr/bin/sqlite3 /var/www/service/database/database.sqlite < /var/www/service/database/createtables.sql
-
+RUN rm -f /var/www/service/database/database.sqlite && \
+    /usr/bin/sqlite3 /var/www/service/database/database.sqlite < /var/www/service/database/createtables.sql && \
+    chmod 666 /var/www/service/database/database.sqlite
+    
 #Change permissions
 RUN chown -R www-data:www-data /var/www/service
 
