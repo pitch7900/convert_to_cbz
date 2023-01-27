@@ -6,9 +6,7 @@ LABEL os="Ubuntu"
 ENV TZ=Europe/Paris
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-RUN apt-get -y update
-RUN apt-get -y upgrade
-RUN apt-get -y install \
+RUN apt-get -y update && apt-get -y upgrade &&  apt-get -y install \
                apache2\
                php\
                php-cli\
@@ -20,6 +18,7 @@ RUN apt-get -y install \
                gzip\
                python3\
                python3-pip\
+               php-sqlite3\
                imagemagick\
                iputils-ping\
                libmagickcore-dev\
@@ -33,7 +32,8 @@ RUN apt-get -y install \
                tar\
                unrar\
                unzip\
-               zip
+               zip \ 
+               &&  apt-get -y autoremove
 
 #Install necessary pyhton modules
 RUN pip install Pillow tqdm rarfile python-magic colored PyMuPDF 

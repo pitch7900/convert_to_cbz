@@ -6,8 +6,6 @@ use App\ContainerFactory;
 use Slim\Factory\AppFactory;
 use Dotenv\Exception\InvalidPathException;
 
-
-$currentdbversion = 4;
 // Set the absolute path to the root directory.
 $rootPath = realpath(__DIR__ . '/..');
 // Set the default timezone.
@@ -15,15 +13,17 @@ date_default_timezone_set('Europe/Zurich');
 
 require __DIR__ . '/../vendor/autoload.php';
 
+try {
+    $dotenv = Dotenv::createMutable($rootPath . '/config/');
+    $dotenv->load();
+    //Minimal values to run this website
+} catch (InvalidPathException $e) {
+    die("Unable to load configuration file");
+}
 
-// session_cache_limiter('public');
-// ini_set("session.cookie_httponly", 1);
-// session_name('APPS_SESSID');
+//Load DB configuration
+require_once __DIR__ . '/database.php';
 
-//Use a custom SessionHandler Based on database.
-//$handler = new DBSessionsHandler(3600,'user',$rootPath."/logs/sessions.log",false);
-//session_set_save_handler($handler, true);
-//session_start();
 
 // Create the container for dependency injection.
 try {

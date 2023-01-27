@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use DateTime;
+use App\Database\LogsDB;
 use App\Controllers\AbstractController;
 use Slim\Http\ServerRequest as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -25,7 +26,12 @@ class HomeController extends AbstractController
      */
     public function status(Request $request, Response $response)
     {
-        return $this->withJSON($response, ["status" => "OK"]);
+        $logs = LogsDB::get()->toArray();
+
+        return $this->withJSON($response, [
+            "status" => "OK",
+            "logs"=>$logs
+        ]);
     }
 
     public function convert(Request $request, Response $response)
@@ -37,12 +43,16 @@ class HomeController extends AbstractController
             return $this->withStatus($response,400,"Please POST a 'file' in body of query.");
         }
 
-
-
-
-
         $this->logger->debug("Input File array is : \n" . print_r($file, true));
-
+        $log = LogsDB::Create([
+            "file" => $file['name'],
+            "tmp_name" => $file['tmp_name'],
+            'size' => $file['size'],
+            'start' => date("Y-m-d H:i:s"),
+            'end' => null,
+            'status' => 'created'
+        ]);
+        $log->save();
 
         // Définition du chemin du fichier
         $filePath = $file['tmp_name'];
@@ -57,12 +67,17 @@ class HomeController extends AbstractController
         $this->logger->debug("exec output : " . print_r($output, true) . "\n");
         $this->logger->debug("exit code : " . intval($returnValue) . "\n");
 
+        $log->end=date("Y-m-d H:i:s");
+        $log->save();
         /* If the exit code of the shell command is not 0, then the script will return a 500 error. */
         if ($returnValue != 0) {
+            $log->status="Failed";
+            $log->save();
             $this->withStatus($response,500,"There was an error processing  file.\n" . print_r($output, true));
         }
 
-
+        $log->status="Success";
+        $log->save();
         $this->logger->debug("Should send : " . $output[0] . "\n");
 
 

@@ -6,8 +6,6 @@ This is supposed to be used as a container
 A valid token should be passed in the headers
 Token is set in the docker-compose.yml file
 
-
-
 ## Installation
 
 ```bash
@@ -31,3 +29,20 @@ curl --location --request POST 'http://localhost:1080/convert' \
 --header 'token: 123456789' \
 --form 'file=@"/pathtocbzfile.cbz"
 ```
+
+### Sqlite DB table creation
+
+````sql
+CREATE TABLE "logsdb" (
+ "id" INTEGER,
+ "file" TEXT,
+ "tmp_name" TEXT,
+ "size" INTEGER,
+ "start" TIMESTAMP,
+ "end" TIMESTAMP,
+ "status" TEXT,
+ "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ PRIMARY KEY("id" AUTOINCREMENT)
+);
+````
