@@ -43,6 +43,8 @@ class AuthMiddleware extends AbstractController
     {
         $this->logger->debug("AuthMiddleware::__invoke " . getenv('apptoken'));
         if (!Authentication::IsAuthentified($this->logger)) {
+            $this->logger->error("AuthMiddleware::__invoke Authentication failed");
+
             $responseFactory = new ResponseFactory();
             $response = $responseFactory->createResponse();
             return $this->withStatus($response,403,"Not allowed");

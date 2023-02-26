@@ -12,17 +12,19 @@ class Authentication
      */
     public static function IsAuthentified($logger): bool
     {
-        
+        $headers = getallheaders();
         if (is_null(getenv('apptoken'))) {
-            $logger->debug("Authentication::IsAuthentified apptoken not set");
+            $logger->error("Authentication::IsAuthentified apptoken not set");
+            $logger->error("Authentication::IsAuthentified Headers : ".var_export($headers,true));
+            $logger->error("Authentication::IsAuthentified ENV : ".$_ENV);
             return false;
         } else {
-            $headers = getallheaders();
-            $logger->debug("Authentication::IsAuthentified ".var_export($headers,true));
+            $logger->debug("Apptoken env value is ".getenv('apptoken'));
+            $logger->error("Authentication::IsAuthentified Headers : ".var_export($headers,true));
             foreach ($headers as $name => $value) {
-                if (strcmp($name, "token") == 0) {
+                if (strcasecmp($name, "token") == 0) {
                     $logger->debug("Authentication::IsAuthentified token found with value :".$value);
-                    if (strcmp($value,getenv('apptoken'))==0) {
+                    if (strcasecmp($value,getenv('apptoken'))==0) {
                         $logger->debug("Authentication::IsAuthentified token match");
                         return true;
                     } else {
