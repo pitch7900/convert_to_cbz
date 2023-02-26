@@ -46,6 +46,7 @@ CREATE TABLE "logsdb" (
  PRIMARY KEY("id" AUTOINCREMENT)
 );
 ````
+
 ## Push on scaleway registry
 
 ````bash
