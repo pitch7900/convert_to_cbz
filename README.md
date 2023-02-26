@@ -46,3 +46,12 @@ CREATE TABLE "logsdb" (
  PRIMARY KEY("id" AUTOINCREMENT)
 );
 ````
+## Push on scaleway registry
+
+````bash
+docker login rg.fr-par.scw.cloud/ns-ebooks -u nologin
+
+docker tag converter-service rg.fr-par.scw.cloud/ns-ebooks/converter-service:latest
+docker push rg.fr-par.scw.cloud/ns-ebooks/converter-service:latest
+
+````
