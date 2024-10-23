@@ -72,7 +72,7 @@ class HomeController extends AbstractController
         $log->end=date("Y-m-d H:i:s");
         $log->save();
         /* If the exit code of the shell command is not 0, then the script will return a 500 error. */
-        if ($returnValue != 0) {
+        if (intval($returnValue) != 0) {
             $log->status="Failed";
             $log->save();
             $this->withStatus($response,500,"There was an error processing  file.\n" . print_r($output, true));

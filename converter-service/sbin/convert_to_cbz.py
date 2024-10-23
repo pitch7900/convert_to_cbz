@@ -40,45 +40,69 @@ def convert_all_files_to_jpeg(path):
     for dirpath, subdirs, files in os.walk(path):
         for file in files:
             if os.path.splitext(file)[1] in ('.png', '.gif', '.bmp'):
-                convert_to_jpeg(file)
+                # Créer le chemin complet du fichier
+                full_file_path = os.path.join(dirpath, file)
+                # Appeler la fonction de conversion avec le chemin complet
+                convert_to_jpeg(full_file_path)
 
-def cbz_to_cbz(cbz_source,cbz_destination):
+def cbz_to_cbz(cbz_source, cbz_destination):
     """
     It takes a CBZ file, extracts all the images, converts them to JPEG, renames them to a 4 digit
     number, and then creates a new CBZ file with the renamed images
     
     :param cbz_source: The source CBZ file
-    :param cbz_filename: The name of the CBZ file to create
+    :param cbz_destination: The name of the CBZ file to create
     """
-    # Créer un répertoire temporaire pour les images
-    temp_dir = tempfile.mkdtemp()
-    
+    # Créer deux répertoires temporaires
+    temp_dir = tempfile.mkdtemp()        # Pour extraction initiale
+    temp_dir_processed = tempfile.mkdtemp()  # Pour les fichiers renommés et convertis
 
-    with zipfile.ZipFile(cbz_destination, 'w') as cbz_file:
+    try:
+        # Extraire les fichiers du CBZ source dans le répertoire temporaire
         with zipfile.ZipFile(cbz_source, 'r') as source:
-            # It extracts all the files from the source zip file into the temporary directory.
             source.extractall(temp_dir)
 
-        
-        # It converts all the images in the temporary directory to JPEG format.
-        convert_all_files_to_jpeg(temp_dir)
+        # Fonction pour obtenir tous les fichiers dans le répertoire temporaire, y compris les sous-répertoires
+        def get_all_files_recursively(directory):
+            file_list = []
+            for root, dirs, files in os.walk(directory):
+                for file in files:
+                    file_list.append(os.path.join(root, file))
+            return file_list
 
-        i = 1
-        for dirpath, subdirs, files in os.walk(temp_dir):
-            # Réindexer les fichiers jpeg
-            files.sort()
-            for file in (files):
-                if file.endswith('.jpg'):
-                    old_path = os.path.join(dirpath, file)
-                    new_filename = str(i).zfill(4) + ".jpg"
-                    new_path = os.path.join(dirpath,new_filename)
-                    os.rename(old_path, new_path)
-                    # Ajouter le fichier renommé au fichier CBZ
-                    cbz_file.write(new_path,new_filename)
-                    i += 1
+        # Filtrer les fichiers valides (images uniquement)
+        valid_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp']  # Ajouter d'autres extensions si nécessaire
+        files = sorted(
+            [f for f in get_all_files_recursively(temp_dir) if os.path.splitext(f)[1].lower() in valid_extensions]
+        )
 
-        # Supprimer les fichiers extraits
+        # Renommer les fichiers extraits et les copier dans le répertoire temporaire de traitement
+        for i, filepath in enumerate(files):
+            file_extension = os.path.splitext(filepath)[1]
+            new_name = f'{i:04}{file_extension}'  # Nouveau nom au format nnnn.extension
+            new_path = os.path.join(temp_dir_processed, new_name)
+            
+            shutil.copy(filepath, new_path)  # Copier le fichier renommé dans le répertoire de traitement
+
+        # Convertir tous les fichiers du répertoire de traitement en JPEG
+        convert_all_files_to_jpeg(temp_dir_processed)
+
+        # Créer un nouveau CBZ avec les fichiers convertis et renommés
+        with zipfile.ZipFile(cbz_destination, 'w') as cbz_file:
+            i = 1
+            for dirpath, subdirs, files in os.walk(temp_dir_processed):
+                files.sort()  # S'assurer que les fichiers sont traités dans l'ordre
+                for file in files:
+                    if file.endswith('.jpg'):
+                        path = os.path.join(dirpath, file)
+                        # Ajouter le fichier renommé au fichier CBZ avec son chemin relatif
+                        cbz_file.write(path, file)
+                        i += 1
+
+    finally:
+        # Supprimer les fichiers extraits et traités
         shutil.rmtree(temp_dir)
+        shutil.rmtree(temp_dir_processed)
 
 def pdf_to_cbz(pdf_filename, cbz_filename):
     """
